@@ -1,0 +1,55 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1689769596146,
+      "tag": "0000_material_infant_terrible",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1689771301091,
+      "tag": "0001_curious_thunderbolt",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1689771347553,
+      "tag": "0002_nostalgic_wild_child",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1689772860553,
+      "tag": "0003_whole_gorgon",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1689773025528,
+      "tag": "0004_daily_maddog",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1689773115654,
+      "tag": "0005_mature_typhoid_mary",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1689886826467,
+      "tag": "0006_noisy_tony_stark",
+      "breakpoints": true
+    }
+  ]
+}
