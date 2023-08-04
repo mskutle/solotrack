@@ -1,13 +1,22 @@
-import { Form } from "@remix-run/react";
+import { Form, Link } from "@remix-run/react";
 import { DatePicker } from "./@/components/ui/date-picker";
 import { Input } from "./@/components/ui/input";
 import { Label } from "./@/components/ui/label";
 import { useState } from "react";
-import { RichTextEditor } from "./common/RichTextEditor";
 import { Textarea } from "./@/components/ui/textarea";
+import type { Client } from "./db/schema/clients";
+import type { SerializeFrom } from "@remix-run/node";
+import {
+  Select,
+  SelectItem,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+} from "./@/components/ui/select";
 
 type Props = {
   id: string;
+  clients: SerializeFrom<Client>[];
 };
 
 export function ProjectForm(props: Props) {
@@ -17,13 +26,36 @@ export function ProjectForm(props: Props) {
   return (
     <Form method="post" className="flex flex-col gap-6" id={props.id}>
       <fieldset className="flex flex-col gap-1.5">
-        <Label htmlFor="name">Name</Label>
+        <Label htmlFor="name">Name*</Label>
         <Input id="name" type="text" name="name" />
       </fieldset>
       <fieldset className="flex flex-col gap-1.5">
-        <Label htmlFor="description">Description</Label>
-        {/* <RichTextEditor /> */}
-        <Textarea id="description" name="description" />
+        <Label htmlFor="client">Select the client*</Label>
+        <Select name="clientId">
+          <SelectTrigger>
+            <SelectValue placeholder="Select..." />
+          </SelectTrigger>
+          <SelectContent>
+            {props.clients.map((c) => (
+              <SelectItem value={c.id} key={c.id}>
+                {c.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <span className="text-zinc-500 text-sm">
+          or{" "}
+          <Link to="/clients/new" className="underline">
+            create a new one
+          </Link>
+        </span>
+      </fieldset>
+      <fieldset className="flex flex-col gap-1.5">
+        <Label htmlFor="description">Description*</Label>
+        <Textarea id="description" name="description" className="h-36" />
+        <span className="text-zinc-500 text-sm">
+          Describe the project and what you did.
+        </span>
       </fieldset>
       <div className="flex gap-2">
         <fieldset className="flex flex-col gap-1.5 flex-auto">

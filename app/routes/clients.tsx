@@ -1,20 +1,16 @@
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { NavLink, Outlet, useLoaderData, useNavigate } from "@remix-run/react";
-import { eq } from "drizzle-orm";
 import { Plus } from "lucide-react";
 import { Button } from "~/@/components/ui/button";
 import { ensureAuthenticated } from "~/auth/helpers";
-import { db } from "~/db/db";
-import { clients } from "~/db/schema/clients";
+import { getClients } from "~/db/get-clients";
 import { MasterDetail } from "~/layouts/MasterDetail";
 import { PageContainer } from "~/layouts/PageContainer";
 
 export async function loader({ request }: LoaderArgs) {
   const user = await ensureAuthenticated(request);
-  const userClients = await db.query.clients.findMany({
-    where: eq(clients.userId, user.id),
-  });
+  const userClients = await getClients(user.id);
   return json({ user, clients: userClients });
 }
 

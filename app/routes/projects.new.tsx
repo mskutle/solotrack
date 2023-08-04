@@ -16,6 +16,8 @@ import { type InsertProject, projects } from "~/db/schema/projects";
 import { useId } from "react";
 import { Save } from "lucide-react";
 import { MainContent } from "~/layouts/MainContent";
+import { getClients } from "~/db/get-clients";
+import { useLoaderData } from "@remix-run/react";
 
 export async function action({ request }: ActionArgs) {
   const user = await ensureAuthenticated(request);
@@ -26,6 +28,7 @@ export async function action({ request }: ActionArgs) {
     description: z.string().nonempty(),
     startedAt: z.coerce.date(),
     endedAt: z.coerce.date().optional(),
+    clientId: z.string().uuid(),
   })
     .omit({ id: true, userId: true })
     .strict()
@@ -51,16 +54,18 @@ export async function action({ request }: ActionArgs) {
 
 export async function loader({ request }: LoaderArgs) {
   const user = await ensureAuthenticated(request);
-  return json(user);
+  const clients = await getClients(user.id);
+  return json(clients);
 }
 
 export default function NewProject() {
   const projectFormId = useId();
+  const clients = useLoaderData<typeof loader>();
   return (
     <MainContent>
-      <div className="max-w-sm flex flex-col gap-8">
+      <div className="max-w-md flex flex-col gap-8">
         <h1 className="text-4xl font-bold">New project</h1>
-        <ProjectForm id={projectFormId} />
+        <ProjectForm id={projectFormId} clients={clients} />
         <Button
           form={projectFormId}
           type="submit"

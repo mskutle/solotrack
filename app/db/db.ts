@@ -1,10 +1,6 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import {
-  userProjectsRelation,
-  users,
-  userClientsRelation,
-} from "./schema/users";
+import { userProjectsRelation, users } from "./schema/users";
 import { config } from "~/config";
 import { projects, projectOwnerRelation } from "./schema/projects";
 import { clients, clientsUserRelation } from "./schema/clients";
@@ -18,7 +14,6 @@ export const db = drizzle(client, {
     clients,
     projectOwnerRelation,
     userProjectsRelation,
-    userClientsRelation,
     clientsUserRelation,
   },
 });

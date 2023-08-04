@@ -76,12 +76,12 @@ const Header = (props: HeaderProps) => {
 };
 
 const Detail = (props: Props) => (
-  <div className="flex flex-col">{props.children}</div>
+  <div className="flex flex-col overflow-y-hidden">{props.children}</div>
 );
 
 const DetailContent = (props: DetailContentProps) => {
   const { children } = props;
-  return <main className={cn("w-full grow")}>{children}</main>;
+  return <main className={cn("w-full grow overflow-y-auto")}>{children}</main>;
 };
 
 const ListItemHeading = (props: Props) => (

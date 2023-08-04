@@ -1,26 +1,20 @@
 import { json, type LoaderArgs } from "@remix-run/node";
-import { NavLink, Outlet, useLoaderData, useNavigate } from "@remix-run/react";
-import { desc, eq } from "drizzle-orm";
+import { Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
 import { Plus } from "lucide-react";
 import { Button } from "~/@/components/ui/button";
 import { ensureAuthenticated } from "~/auth/helpers";
-import { db } from "~/db/db";
-import { projects } from "~/db/schema/projects";
+import { getProjectList } from "~/db/get-project-list";
 import { MasterDetail } from "~/layouts/MasterDetail";
 import { PageContainer } from "~/layouts/PageContainer";
 
 export async function loader({ request }: LoaderArgs) {
   const user = await ensureAuthenticated(request);
-  const userProjects = await db.query.projects.findMany({
-    where: eq(projects.userId, user.id),
-    orderBy: desc(projects.createdAt),
-  });
+  const projects = await getProjectList(user.id);
 
-  return json({ user, projects: userProjects });
+  return json({ user, projects });
 }
 
 export default function Projects() {
-  const navigate = useNavigate();
   const { user, projects } = useLoaderData<typeof loader>();
 
   return (
@@ -29,8 +23,10 @@ export default function Projects() {
         <MasterDetail.Master>
           <MasterDetail.MasterHeader>
             <h2>All projects</h2>
-            <Button variant="ghost" size="icon" onClick={() => navigate("new")}>
-              <Plus />
+            <Button asChild variant="ghost" size="icon">
+              <Link to="new">
+                <Plus />
+              </Link>
             </Button>
           </MasterDetail.MasterHeader>
           <MasterDetail.MasterList>
@@ -44,7 +40,7 @@ export default function Projects() {
                     <MasterDetail.MasterListItem.Description
                       highlight={isActive}
                     >
-                      {p.description}
+                      {p.client.name}
                     </MasterDetail.MasterListItem.Description>
                   </MasterDetail.MasterListItem>
                 )}

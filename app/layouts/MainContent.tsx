@@ -13,7 +13,7 @@ export function MainContent(props: Props) {
     <div
       className={cn(
         "w-full h-full",
-        centerX && "max-w-5xl mx-auto",
+        centerX && "max-w-4xl mx-auto",
         pad && "p-8"
       )}
     >

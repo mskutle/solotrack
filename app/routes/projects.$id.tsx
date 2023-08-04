@@ -34,9 +34,9 @@ export default function ProjectDetails() {
 
 export function ErrorBoundary() {
   return (
-    <div className="grid place-items-center">
+    <MainContent>
       <h1 className="text-2xl font-bold">Sorry. Our bad.</h1>
       <p>Something went wrong. Please try again at a later time.</p>
-    </div>
+    </MainContent>
   );
 }
