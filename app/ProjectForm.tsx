@@ -52,10 +52,11 @@ export function ProjectForm(props: Props) {
       </fieldset>
       <fieldset className="flex flex-col gap-1.5">
         <Label htmlFor="description">Description*</Label>
-        <Textarea id="description" name="description" className="h-36" />
         <span className="text-zinc-500 text-sm">
           Describe the project and what you did.
         </span>
+        <Textarea id="description" name="description" className="h-36" />
+
       </fieldset>
       <div className="flex gap-2">
         <fieldset className="flex flex-col gap-1.5 flex-auto">

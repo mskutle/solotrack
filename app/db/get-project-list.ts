@@ -11,6 +11,8 @@ export async function getProjectList(userId: string) {
       id: projects.id,
       name: projects.name,
       description: projects.description,
+      startedAt: projects.startedAt,
+      endedAt: projects.endedAt,
       client: {
         name: clients.name,
       },

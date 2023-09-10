@@ -2,7 +2,6 @@ import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { cn } from "~/@/lib/utils";
-import { Button } from "~/@/components/ui/button";
 import { GripVertical } from "lucide-react";
 
 type Props = {
@@ -12,16 +11,8 @@ type Props = {
 };
 
 export function SortableItem(props: Props) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    setActivatorNodeRef,
-    transform,
-    transition,
-    isDragging,
-    isSorting,
-  } = useSortable({ id: props.id });
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: props.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -33,7 +24,7 @@ export function SortableItem(props: Props) {
       ref={setNodeRef}
       style={style}
       className={cn(
-        "group flex items-center justify-between bg-zinc-50 rounded-md p-4"
+        "group flex gap-8 items-center justify-between bg-zinc-50 rounded-md p-4"
       )}
       {...attributes}
       {...listeners}

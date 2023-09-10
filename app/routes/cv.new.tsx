@@ -1,9 +1,11 @@
-import { json, type LoaderArgs } from "@remix-run/node";
+import { json, SerializeFrom, type LoaderArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { CvForm } from "~/cv/CvForm";
 import { ensureAuthenticated } from "~/auth/helpers";
-import { getProjectList } from "~/db/get-project-list";
+import { ProjectList, getProjectList } from "~/db/get-project-list";
 import { MainContent } from "~/layouts/MainContent";
+import { CvPreview } from "~/cv/CvPreview";
+import { useState } from "react";
 
 export async function loader({ request }: LoaderArgs) {
   const user = await ensureAuthenticated(request);
@@ -12,12 +14,23 @@ export async function loader({ request }: LoaderArgs) {
   return json(projects);
 }
 
+export type Cv = {
+  projects: SerializeFrom<ProjectList>;
+};
+
 export default function NewCv() {
   const projects = useLoaderData<typeof loader>();
+  const [cv, setCv] = useState<Cv>({ projects });
+
   return (
-    <MainContent>
-      <div className="mt-4">
-        <CvForm projects={projects} />
+    <MainContent centerX={false} pad={false}>
+      <div className="p-8 flex gap-8 w-full h-full">
+        <div className="shrink-0">
+          <CvForm cv={cv} onChange={(updatedCv) => setCv(updatedCv)} />
+        </div>
+        <div className="grow bg-blue-300">
+          <CvPreview cv={cv} />
+        </div>
       </div>
     </MainContent>
   );

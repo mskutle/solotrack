@@ -1,14 +1,37 @@
+import { Link } from "@react-pdf/renderer";
 import Linkify from "linkify-react";
 import type { IntermediateRepresentation } from "linkifyjs";
 import type { ReactNode } from "react";
 
 type Props = {
+  target?: "web" | "pdf";
   children: ReactNode;
 };
 
-const LinkRenderer = (props: IntermediateRepresentation) => {
+export function Linkifyer(props: Props) {
+  const { target = "web" } = props;
+  switch (target) {
+    case "web":
+      return (
+        <Linkify options={{ render: WebLinkRenderer }}>
+          {props.children}
+        </Linkify>
+      );
+    case "pdf":
+      return (
+        <Linkify options={{ render: PdfLinkRenderer }}>
+          {props.children}
+        </Linkify>
+      );
+    default:
+      throw new Error("no renderer for that target");
+  }
+}
+
+const WebLinkRenderer = (props: IntermediateRepresentation) => {
   const { attributes, content } = props;
   const { href, ...rest } = attributes;
+
   return (
     <a
       href={href}
@@ -22,6 +45,13 @@ const LinkRenderer = (props: IntermediateRepresentation) => {
   );
 };
 
-export function Linkifyer(props: Props) {
-  return <Linkify options={{ render: LinkRenderer }}>{props.children}</Linkify>;
-}
+const PdfLinkRenderer = (props: IntermediateRepresentation) => {
+  const { attributes, content } = props;
+  const { href, ...rest } = attributes;
+
+  return (
+    <Link src={href} {...rest}>
+      {content}
+    </Link>
+  );
+};

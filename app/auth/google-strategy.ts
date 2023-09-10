@@ -22,7 +22,7 @@ export const googleStrategy = new GoogleStrategy(
         return existingUser;
       }
 
-      const newUser = await db
+      const results = await db
         .insert(users)
         .values({
           id: profile.id,
@@ -33,7 +33,7 @@ export const googleStrategy = new GoogleStrategy(
         })
         .returning();
 
-      return newUser[0];
+      return results[0];
     } catch (error) {
       console.error(error);
       throw error;
