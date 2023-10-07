@@ -4,50 +4,33 @@ import {
   json,
   redirect,
 } from "@remix-run/node";
-import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
-import { v4 as uuid } from "uuid";
 import { Button } from "~/@/components/ui/button";
 
 import { ProjectForm } from "~/ProjectForm";
 import { ensureAuthenticated } from "~/auth/helpers";
-import { db } from "~/db/db";
-import { type InsertProject, projects } from "~/db/schema/projects";
 import { useId } from "react";
 import { Save } from "lucide-react";
 import { MainContent } from "~/layouts/MainContent";
 import { getClients } from "~/db/get-clients";
 import { useLoaderData } from "@remix-run/react";
+import { createProject, createProjectSchema } from "~/db/create-project";
 
 export async function action({ request }: ActionArgs) {
   const user = await ensureAuthenticated(request);
   const formData = await request.formData();
 
-  const result = createInsertSchema(projects, {
-    name: z.string().nonempty(),
-    description: z.string().nonempty(),
-    startedAt: z.coerce.date(),
-    endedAt: z.coerce.date().optional(),
-    clientId: z.string().uuid(),
-  })
-    .omit({ id: true, userId: true })
-    .strict()
-    .safeParse(Object.fromEntries(formData));
+  const createProjectRequest = createProjectSchema.safeParse(
+    Object.fromEntries(formData)
+  );
 
-  if (!result.success) {
+  if (!createProjectRequest.success) {
     return json(
-      { success: false, errors: result.error.format() },
+      { success: false, errors: createProjectRequest.error.format() },
       { status: 400 }
     );
   }
 
-  const project: InsertProject = {
-    ...result.data,
-    id: uuid(),
-    userId: user.id,
-  };
-
-  await db.insert(projects).values(project);
+  await createProject(user.id, createProjectRequest.data);
 
   return redirect(".");
 }

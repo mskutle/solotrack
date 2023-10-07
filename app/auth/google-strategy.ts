@@ -1,8 +1,7 @@
 import { GoogleStrategy } from "remix-auth-google";
 import { config } from "~/config";
-import { db } from "~/db/db";
-import { eq } from "drizzle-orm";
-import { users } from "~/db/schema/users";
+import { getUserByEmail } from "~/db/get-user-by-email";
+import { createUser } from "~/db/create-user";
 
 const { clientId, clientSecret, callbackURL } = config.auth.google;
 
@@ -13,30 +12,20 @@ export const googleStrategy = new GoogleStrategy(
     callbackURL,
   },
   async ({ profile }) => {
-    try {
-      const existingUser = await db.query.users.findFirst({
-        where: eq(users.email, profile.emails[0].value),
-      });
+    const existingUser = await getUserByEmail(profile.emails[0].value);
 
-      if (existingUser) {
-        return existingUser;
-      }
-
-      const results = await db
-        .insert(users)
-        .values({
-          id: profile.id,
-          email: profile.emails[0].value,
-          firstName: profile.name.givenName,
-          lastName: profile.name.familyName,
-          photoUrl: profile.photos[0].value,
-        })
-        .returning();
-
-      return results[0];
-    } catch (error) {
-      console.error(error);
-      throw error;
+    if (existingUser) {
+      return existingUser;
     }
+
+    const newUser = await createUser({
+      id: profile.id,
+      email: profile.emails[0].value,
+      firstName: profile.name.givenName,
+      lastName: profile.name.familyName,
+      photoUrl: profile.photos[0].value,
+    });
+
+    return newUser;
   }
 );

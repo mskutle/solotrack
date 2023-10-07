@@ -5,7 +5,6 @@ import {
   StyleSheet,
   View,
   Text,
-  usePDF,
 } from "@react-pdf/renderer";
 import { Linkifyer } from "~/common/Linkifyer";
 import type { Cv } from "~/routes/cv.new";
@@ -64,8 +63,6 @@ const styles = StyleSheet.create({
 });
 
 export function CurriculumVitae(props: Props) {
-  console.log(props.cv.projects.map((p) => p.name));
-
   return (
     <Document
       style={styles.document}

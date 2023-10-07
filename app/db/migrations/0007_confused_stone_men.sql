@@ -1,1 +1,0 @@
-ALTER TABLE "projects" ADD COLUMN "clientId" varchar NOT NULL;

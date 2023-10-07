@@ -1,3 +1,4 @@
+import type { User } from "@prisma/client";
 import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
 import type { SerializeFrom } from "@remix-run/node";
 import { NavLink, useNavigate } from "@remix-run/react";
@@ -16,7 +17,6 @@ import {
   DropdownMenuTrigger,
 } from "~/@/components/ui/dropdown-menu";
 import { cn } from "~/@/lib/utils";
-import type { User } from "~/db/schema/users";
 
 type Props = {
   user: SerializeFrom<User>;

@@ -1,8 +1,8 @@
 import type { SerializeFrom } from "@remix-run/node";
-import type { ProjectList } from "~/db/get-project-list";
 import { PDFViewer } from "@react-pdf/renderer";
 import { ClientOnly } from "remix-utils";
 import { CurriculumVitae } from "./Cv";
+import type { ProjectList } from "~/db/get-project-list";
 
 type Props = {
   cv: {

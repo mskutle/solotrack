@@ -1,21 +1,17 @@
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { Client } from "~/Client";
 import { ensureAuthenticated } from "~/auth/helpers";
-import { db } from "~/db/db";
-import { clients } from "~/db/schema/clients";
+import { getClientById } from "~/db/get-client-by-id";
 import { MainContent } from "~/layouts/MainContent";
 
 export async function loader({ request, params }: LoaderArgs) {
-  const user = await ensureAuthenticated(request);
+  await ensureAuthenticated(request);
   const clientId = z.string().parse(params.id);
 
-  const client = await db.query.clients.findFirst({
-    where: and(eq(clients.userId, user.id), eq(clients.id, clientId)),
-  });
+  const client = await getClientById(clientId);
 
   if (!client) {
     throw new Response(null, { status: 404 });

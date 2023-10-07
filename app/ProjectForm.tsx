@@ -4,7 +4,6 @@ import { Input } from "./@/components/ui/input";
 import { Label } from "./@/components/ui/label";
 import { useState } from "react";
 import { Textarea } from "./@/components/ui/textarea";
-import type { Client } from "./db/schema/clients";
 import type { SerializeFrom } from "@remix-run/node";
 import {
   Select,
@@ -13,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./@/components/ui/select";
+import type { Client } from "@prisma/client";
 
 type Props = {
   id: string;
@@ -56,7 +56,6 @@ export function ProjectForm(props: Props) {
           Describe the project and what you did.
         </span>
         <Textarea id="description" name="description" className="h-36" />
-
       </fieldset>
       <div className="flex gap-2">
         <fieldset className="flex flex-col gap-1.5 flex-auto">

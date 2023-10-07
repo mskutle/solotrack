@@ -2,9 +2,6 @@ import { json, type ActionArgs, redirect } from "@remix-run/node";
 import { Save } from "lucide-react";
 import { useId } from "react";
 import { Button } from "~/@/components/ui/button";
-import { db } from "~/db/db";
-import { v4 as uuid } from "uuid";
-import { clients } from "~/db/schema/clients";
 import { ensureAuthenticated } from "~/auth/helpers";
 import { createNewClientSchema } from "~/clients/validation";
 import { Form, useActionData } from "@remix-run/react";
@@ -13,6 +10,7 @@ import { useForm } from "@conform-to/react";
 import { Label } from "~/@/components/ui/label";
 import { Input } from "~/@/components/ui/input";
 import { MainContent } from "~/layouts/MainContent";
+import { createClient } from "~/db/create-client";
 
 export async function action({ request }: ActionArgs) {
   const user = await ensureAuthenticated(request);
@@ -24,10 +22,7 @@ export async function action({ request }: ActionArgs) {
     return json(submission, { status: 400 });
   }
 
-  await db
-    .insert(clients)
-    .values({ id: uuid(), name: submission.value.name, userId: user.id })
-    .returning();
+  await createClient(user.id, submission.value.name);
 
   return redirect(".");
 }

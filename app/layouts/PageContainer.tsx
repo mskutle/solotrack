@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { MainNavigation } from "./MainNavigation";
-import type { User } from "~/db/schema/users";
 import type { SerializeFrom } from "@remix-run/node";
+import type { User } from "@prisma/client";
 
 type Props = {
   children: ReactNode;

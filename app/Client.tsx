@@ -1,7 +1,7 @@
 import type { SerializeFrom } from "@remix-run/node";
-import type { Client } from "./db/schema/clients";
 import { Pencil, Trash2 } from "lucide-react";
 import { Button } from "./@/components/ui/button";
+import type { Client } from "@prisma/client";
 
 type Props = {
   client: SerializeFrom<Client>;

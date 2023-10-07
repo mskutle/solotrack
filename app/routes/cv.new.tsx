@@ -1,8 +1,8 @@
-import { json, SerializeFrom, type LoaderArgs } from "@remix-run/node";
+import { json, type SerializeFrom, type LoaderArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { CvForm } from "~/cv/CvForm";
 import { ensureAuthenticated } from "~/auth/helpers";
-import { ProjectList, getProjectList } from "~/db/get-project-list";
+import { type ProjectList, getProjectList } from "~/db/get-project-list";
 import { MainContent } from "~/layouts/MainContent";
 import { CvPreview } from "~/cv/CvPreview";
 import { useState } from "react";

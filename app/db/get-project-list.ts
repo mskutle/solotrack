@@ -1,26 +1,12 @@
-import { eq, desc } from "drizzle-orm";
-import { db } from "./db";
-import { projects } from "./schema/projects";
-import { clients } from "./schema/clients";
+import { prisma } from "./prisma-client";
 
-export type ProjectList = Awaited<typeof getProjectList>;
+export type ProjectList = Awaited<ReturnType<typeof getProjectList>>;
+export type ProjectListItem = ProjectList[number];
 
-export async function getProjectList(userId: string) {
-  const result = await db
-    .select({
-      id: projects.id,
-      name: projects.name,
-      description: projects.description,
-      startedAt: projects.startedAt,
-      endedAt: projects.endedAt,
-      client: {
-        name: clients.name,
-      },
-    })
-    .from(projects)
-    .where(eq(projects.userId, userId))
-    .innerJoin(clients, eq(projects.clientId, clients.id))
-    .orderBy(desc(projects.createdAt));
-
-  return result.flatMap((p) => p);
+export async function getProjectList(ownerId: string) {
+  return prisma.project.findMany({
+    where: { ownerId },
+    include: { client: true },
+    orderBy: { startedAt: "desc" },
+  });
 }

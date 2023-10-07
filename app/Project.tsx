@@ -1,6 +1,6 @@
 import type { SerializeFrom } from "@remix-run/node";
-import type { Project } from "./db/schema/projects";
 import { Linkifyer } from "./common/Linkifyer";
+import type { Project } from "@prisma/client";
 
 type Props = {
   project: SerializeFrom<Project>;
