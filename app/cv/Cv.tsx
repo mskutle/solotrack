@@ -27,24 +27,23 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     flex: 1,
     gap: 16,
-    paddingVertical: 32,
+    paddingBottom: 32,
     fontFamily: "Inter",
   },
   header: {
-    paddingBottom: 48,
-    paddingTop: 16,
+    paddingVertical: 48,
     paddingHorizontal: 32,
-    borderBottom: "1px solid lightgray",
+    backgroundColor: "rgb(250, 250, 250)"
   },
   name: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 900,
     flexGrow: 0,
   },
   title: {
     fontSize: 12,
     color: "gray",
-    marginTop: 4,
+    marginTop: 2,
   },
   sections: { gap: 16, padding: 32, fontSize: 14 },
   section: { flexDirection: "row" },
@@ -64,12 +63,7 @@ const styles = StyleSheet.create({
 
 export function CurriculumVitae(props: Props) {
   return (
-    <Document
-      style={styles.document}
-      onRender={(props) => {
-        console.log("Rendering!");
-      }}
-    >
+    <Document style={styles.document}>
       <Page style={styles.page}>
         <View style={styles.header}>
           <Text style={styles.name}>Magne Skutle</Text>
@@ -94,8 +88,8 @@ export function CurriculumVitae(props: Props) {
                       -{" "}
                       {project.endedAt
                         ? new Intl.DateTimeFormat().format(
-                            new Date(project.endedAt)
-                          )
+                          new Date(project.endedAt)
+                        )
                         : null}
                       )
                     </Text>

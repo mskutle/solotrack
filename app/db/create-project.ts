@@ -7,8 +7,19 @@ export const createProjectSchema = z
   .object({
     name: z.string().nonempty(),
     description: z.string().nonempty(),
-    startedAt: z.coerce.date(),
-    endedAt: z.coerce.date().optional(),
+    startingMonth: z.coerce.number().int().min(0).max(11),
+    startingYear: z.coerce
+      .number()
+      .int()
+      .min(1000)
+      .max(new Date().getFullYear()),
+    endingMonth: z.coerce.number().int().min(0).max(11).optional(),
+    endingYear: z.coerce
+      .number()
+      .int()
+      .min(1000)
+      .max(new Date().getFullYear())
+      .optional(),
     clientId: z.string().uuid(),
   })
   .strict();
@@ -17,9 +28,8 @@ export type CreateProjectInput = z.infer<typeof createProjectSchema>;
 
 export async function createProject(
   userId: string,
-  input: CreateProjectInput
+  input: CreateProjectInput,
 ): Promise<Project> {
-  console.log({ userId, input });
   return prisma.project.create({
     data: {
       id: uuid(),
@@ -27,8 +37,11 @@ export async function createProject(
       name: input.name,
       clientId: input.clientId,
       description: input.description,
-      startedAt: input.startedAt,
-      endedAt: input.endedAt,
+      startedAt: new Date(input.startingYear, input.startingMonth),
+      endedAt:
+        input.startingYear && input.startingMonth
+          ? new Date(input.startingYear, input.startingMonth)
+          : undefined,
     },
   });
 }

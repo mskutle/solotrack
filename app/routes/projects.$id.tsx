@@ -22,7 +22,7 @@ export async function loader({ request, params }: LoaderArgs) {
 export default function ProjectDetails() {
   const project = useLoaderData<typeof loader>();
   return (
-    <MainContent>
+    <MainContent align="center">
       <Project key={project.id} project={project} />
     </MainContent>
   );

@@ -38,8 +38,8 @@ export default function NewClient() {
   });
 
   return (
-    <MainContent>
-      <div className="flex flex-col max-w-xs gap-8">
+    <MainContent align="center">
+      <div className="flex flex-col max-w-sm gap-8">
         <h1 className="text-4xl font-bold">New client</h1>
         <Form
           id={clientFormId}

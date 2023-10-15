@@ -24,7 +24,7 @@ export function SortableItem(props: Props) {
       ref={setNodeRef}
       style={style}
       className={cn(
-        "group flex gap-8 items-center justify-between bg-zinc-50 rounded-md p-4"
+        "group flex gap-8 items-center justify-between bg-yellow-50 rounded-md p-4"
       )}
       {...attributes}
       {...listeners}

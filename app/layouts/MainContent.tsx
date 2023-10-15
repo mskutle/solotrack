@@ -1,22 +1,37 @@
+import { type VariantProps, cva } from "class-variance-authority";
 import type { ReactNode } from "react";
 import { cn } from "~/@/lib/utils";
 
-type Props = {
+interface Props extends VariantProps<typeof mainContentVariants> {
   children: ReactNode;
-  pad?: boolean;
-  centerX?: boolean;
-};
+}
+
+const mainContentVariants = cva("w-full h-full", {
+  variants: {
+    padding: {
+      default: "p-8",
+      none: "",
+    },
+    align: {
+      start: "",
+      center: "flex flex-col items-center",
+    },
+    bg: {
+      white: "bg-white",
+      gray: "bg-zinc-50",
+    },
+  },
+  defaultVariants: {
+    padding: "default",
+    align: "start",
+    bg: "white",
+  },
+});
 
 export function MainContent(props: Props) {
-  const { centerX = true, pad = true } = props;
+  const { padding, align, bg } = props;
   return (
-    <div
-      className={cn(
-        "w-full h-full",
-        centerX && "max-w-4xl mx-auto",
-        pad && "p-8"
-      )}
-    >
+    <div className={cn(mainContentVariants({ padding, align, bg }))}>
       {props.children}
     </div>
   );

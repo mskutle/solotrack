@@ -1,9 +1,4 @@
-import {
-  type LoaderArgs,
-  type ActionArgs,
-  json,
-  redirect,
-} from "@remix-run/node";
+import { type LoaderArgs, type ActionArgs, json } from "@remix-run/node";
 import { Button } from "~/@/components/ui/button";
 
 import { ProjectForm } from "~/ProjectForm";
@@ -29,10 +24,10 @@ export async function action({ request }: ActionArgs) {
       { status: 400 }
     );
   }
+  console.log(createProjectRequest.data)
+  const project = await createProject(user.id, createProjectRequest.data);
 
-  await createProject(user.id, createProjectRequest.data);
-
-  return redirect(".");
+  return json(project);
 }
 
 export async function loader({ request }: LoaderArgs) {
@@ -44,8 +39,9 @@ export async function loader({ request }: LoaderArgs) {
 export default function NewProject() {
   const projectFormId = useId();
   const clients = useLoaderData<typeof loader>();
+
   return (
-    <MainContent>
+    <MainContent align="center">
       <div className="max-w-md flex flex-col gap-8">
         <h1 className="text-4xl font-bold">New project</h1>
         <ProjectForm id={projectFormId} clients={clients} />

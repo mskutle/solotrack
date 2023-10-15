@@ -23,14 +23,14 @@ export default function NewCv() {
   const [cv, setCv] = useState<Cv>({ projects });
 
   return (
-    <MainContent centerX={false} pad={false}>
+    <MainContent>
       <div className="p-8 flex gap-8 w-full h-full">
-        <div className="shrink-0">
+        <div className="grow">
           <CvForm cv={cv} onChange={(updatedCv) => setCv(updatedCv)} />
         </div>
-        <div className="grow bg-blue-300">
+        {/* <div className="grow bg-blue-300">
           <CvPreview cv={cv} />
-        </div>
+        </div> */}
       </div>
     </MainContent>
   );

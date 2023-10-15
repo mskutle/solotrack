@@ -23,7 +23,7 @@ export async function loader({ request, params }: LoaderArgs) {
 export default function ClientDetails() {
   const client = useLoaderData<typeof loader>();
   return (
-    <MainContent centerX={false} pad={false}>
+    <MainContent padding="none">
       <Client client={client} />
     </MainContent>
   );
