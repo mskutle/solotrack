@@ -1,4 +1,4 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
 import { Form, Link } from "@remix-run/react";
 import { Button } from "~/@/components/ui/button";
 import {
@@ -10,7 +10,7 @@ import {
 } from "~/@/components/ui/card";
 import { authenticator } from "~/auth/authenticator";
 
-export async function action({ request, params }: ActionArgs) {
+export async function action({ request, params }: ActionFunctionArgs) {
   return authenticator.authenticate("google", request, {
     successRedirect: "/",
     failureRedirect: "/login",

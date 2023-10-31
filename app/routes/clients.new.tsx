@@ -1,4 +1,4 @@
-import { json, type ActionArgs, redirect } from "@remix-run/node";
+import { json, type ActionFunctionArgs, redirect } from "@remix-run/node";
 import { Save } from "lucide-react";
 import { useId } from "react";
 import { Button } from "~/@/components/ui/button";
@@ -12,7 +12,7 @@ import { Input } from "~/@/components/ui/input";
 import { MainContent } from "~/layouts/MainContent";
 import { createClient } from "~/db/create-client";
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const user = await ensureAuthenticated(request);
 
   const formData = await request.formData();

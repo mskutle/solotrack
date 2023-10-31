@@ -1,9 +1,9 @@
-import { type LoaderArgs, json } from "@remix-run/node";
+import { type LoaderFunctionArgs, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { ensureAuthenticated } from "~/auth/helpers";
 import { PageContainer } from "~/layouts/PageContainer";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const user = await ensureAuthenticated(request);
   return json(user);
 }

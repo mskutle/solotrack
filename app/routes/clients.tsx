@@ -1,4 +1,4 @@
-import type { LoaderArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { NavLink, Outlet, useLoaderData, useNavigate } from "@remix-run/react";
 import { Plus } from "lucide-react";
@@ -8,7 +8,7 @@ import { getClients } from "~/db/get-clients";
 import { MasterDetail } from "~/layouts/MasterDetail";
 import { PageContainer } from "~/layouts/PageContainer";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const user = await ensureAuthenticated(request);
   const userClients = await getClients(user.id);
   return json({ user, clients: userClients });

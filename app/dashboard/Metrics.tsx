@@ -7,7 +7,7 @@ type Props = {
 
 export function Metrics(props: Props) {
   return (
-    <div className="shadow-sm p-4 border rounded-md grid gap-4 grid-flow-col">
+    <div className="shadow-sm p-4 border rounded-md grid gap-4 grid-cols-2 md:grid-cols-4">
       <Metric variant="purple">
         <Metric.Value>{props.metrics.clientsCount}</Metric.Value>
         <Metric.Title>Clients</Metric.Title>

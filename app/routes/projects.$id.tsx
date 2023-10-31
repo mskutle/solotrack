@@ -1,4 +1,4 @@
-import { json, Response, type LoaderArgs } from "@remix-run/node";
+import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { z } from "zod";
 import { Project } from "~/Project";
@@ -6,7 +6,7 @@ import { ensureAuthenticated } from "~/auth/helpers";
 import { getProjectById } from "~/db/get-project-by-id";
 import { MainContent } from "~/layouts/MainContent";
 
-export async function loader({ request, params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   await ensureAuthenticated(request);
   const projectId = z.string().parse(params.id);
 

@@ -1,4 +1,4 @@
-import { json, type LoaderArgs } from "@remix-run/node";
+import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
 import { Plus } from "lucide-react";
 import { Button } from "~/@/components/ui/button";
@@ -7,7 +7,7 @@ import { getProjectList } from "~/db/get-project-list";
 import { MasterDetail } from "~/layouts/MasterDetail";
 import { PageContainer } from "~/layouts/PageContainer";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const user = await ensureAuthenticated(request);
   const projects = await getProjectList(user.id);
 

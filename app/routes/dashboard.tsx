@@ -1,4 +1,4 @@
-import { json, type LoaderArgs } from "@remix-run/node";
+import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { ensureAuthenticated } from "~/auth/helpers";
 import { Greeting } from "~/dashboard/Greeting";
@@ -7,7 +7,7 @@ import { getDashboardMetrics } from "~/db/get-dashboard-metrics";
 import { MainContent } from "~/layouts/MainContent";
 import { PageContainer } from "~/layouts/PageContainer";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const user = await ensureAuthenticated(request);
   const metrics = await getDashboardMetrics(user.id);
 

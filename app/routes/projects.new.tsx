@@ -1,4 +1,8 @@
-import { type LoaderArgs, type ActionArgs, json } from "@remix-run/node";
+import {
+  type LoaderFunctionArgs,
+  type ActionFunctionArgs,
+  json,
+} from "@remix-run/node";
 import { Button } from "~/@/components/ui/button";
 
 import { ProjectForm } from "~/ProjectForm";
@@ -10,7 +14,7 @@ import { getClients } from "~/db/get-clients";
 import { useLoaderData } from "@remix-run/react";
 import { createProject, createProjectSchema } from "~/db/create-project";
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const user = await ensureAuthenticated(request);
   const formData = await request.formData();
 
@@ -24,13 +28,13 @@ export async function action({ request }: ActionArgs) {
       { status: 400 }
     );
   }
-  console.log(createProjectRequest.data)
+  console.log(createProjectRequest.data);
   const project = await createProject(user.id, createProjectRequest.data);
 
   return json(project);
 }
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const user = await ensureAuthenticated(request);
   const clients = await getClients(user.id);
   return json(clients);

@@ -2,9 +2,9 @@
   "private": true,
   "sideEffects": false,
   "scripts": {
-    "build": "remix build",
-    "dev": "remix dev",
-    "start": "remix-serve build",
+    "dev": "vite",
+    "build": "vite build && vite build --ssr",
+    "start": "remix-serve ./build/index.js",
     "typecheck": "tsc",
     "db:pull": "prisma db pull",
     "db:generate:client": "prisma generate",
@@ -27,10 +27,10 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-switch": "^1.0.3",
     "@react-pdf/renderer": "^3.1.12",
-    "@remix-run/css-bundle": "^1.19.1",
-    "@remix-run/node": "^1.19.1",
-    "@remix-run/react": "^1.19.1",
-    "@remix-run/serve": "^1.19.1",
+    "@remix-run/css-bundle": "^2.2.0",
+    "@remix-run/node": "^2.2.0",
+    "@remix-run/react": "^2.2.0",
+    "@remix-run/serve": "^2.2.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
@@ -53,15 +53,18 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@remix-run/dev": "^1.19.1",
-    "@remix-run/eslint-config": "^1.19.1",
+    "@remix-run/dev": "^2.2.0",
+    "@remix-run/eslint-config": "^2.2.0",
+    "@types/node": "^20.8.10",
     "@types/react": "^18.0.35",
     "@types/react-dom": "^18.0.11",
     "@types/uuid": "^9.0.2",
     "eslint": "^8.38.0",
     "tailwindcss": "^3.3.3",
     "tsx": "^3.12.7",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "vite": "^4.5.0",
+    "vite-tsconfig-paths": "^4.2.1"
   },
   "engines": {
     "node": ">=14.0.0"

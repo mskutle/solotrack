@@ -1,4 +1,4 @@
-import type { LoaderArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
 import { Plus } from "lucide-react";
@@ -7,7 +7,7 @@ import { ensureAuthenticated } from "~/auth/helpers";
 import { MasterDetail } from "~/layouts/MasterDetail";
 import { PageContainer } from "~/layouts/PageContainer";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const user = await ensureAuthenticated(request);
   const cvs = [{ id: "1", name: "Frontend focused", lang: "nb" }];
 

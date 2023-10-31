@@ -1,10 +1,10 @@
 import {
   redirect,
-  type LoaderArgs,
-  type V2_MetaFunction,
+  type LoaderFunctionArgs,
+  type MetaFunction,
 } from "@remix-run/node";
 
-export const meta: V2_MetaFunction = () => {
+export const meta: MetaFunction = () => {
   return [
     { title: "SoloTrack" },
     {
@@ -15,7 +15,7 @@ export const meta: V2_MetaFunction = () => {
   ];
 };
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   return redirect("/dashboard");
 }
 
