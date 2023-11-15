@@ -1,7 +1,7 @@
 import type { Client } from "@prisma/client";
 import type { SerializeFrom } from "@remix-run/node";
 import { Form, Link, useNavigation } from "@remix-run/react";
-import { useEffect, useRef } from "react";
+import { forwardRef, useEffect, useRef } from "react";
 import { Input } from "./@/components/ui/input";
 import { Label } from "./@/components/ui/label";
 import {
@@ -19,21 +19,19 @@ type Props = {
   clients: SerializeFrom<Client>[];
 };
 
-export function ProjectForm(props: Props) {
-  const formRef = useRef<HTMLFormElement>(null);
+export const ProjectForm = forwardRef<HTMLFormElement, Props>((props, ref) => {
   const nameRef = useRef<HTMLInputElement>(null);
   const navigation = useNavigation();
   const submitting = navigation.state == "submitting";
 
   useEffect(() => {
     if (!submitting) {
-      formRef.current?.reset();
       nameRef.current?.focus();
     }
-  }, [submitting])
+  }, [submitting]);
 
   return (
-    <Form method="post" className="flex flex-col gap-6" id={props.id} ref={formRef}>
+    <Form method="post" className="flex flex-col gap-6" id={props.id} ref={ref}>
       <fieldset className="flex flex-col gap-1.5">
         <Label htmlFor="name">Name*</Label>
         <Input id="name" type="text" name="name" ref={nameRef} />
@@ -162,4 +160,4 @@ export function ProjectForm(props: Props) {
       </fieldset>
     </Form>
   );
-}
+});

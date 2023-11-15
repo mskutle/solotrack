@@ -1,12 +1,12 @@
-import type { Project } from "@prisma/client";
-import { z } from "zod";
-import { prisma } from "./prisma-client";
-import { v4 as uuid } from "uuid";
+import type {Project} from "@prisma/client";
+import {z} from "zod";
+import {prisma} from "./prisma-client";
+import {v4 as uuid} from "uuid";
 
 export const createProjectSchema = z
   .object({
-    name: z.string().nonempty(),
-    description: z.string().nonempty(),
+    name: z.string().min(1),
+    description: z.string().min(1),
     startingMonth: z.coerce.number().int().min(0).max(11),
     startingYear: z.coerce
       .number()
@@ -28,7 +28,7 @@ export type CreateProjectInput = z.infer<typeof createProjectSchema>;
 
 export async function createProject(
   userId: string,
-  input: CreateProjectInput,
+  input: CreateProjectInput
 ): Promise<Project> {
   return prisma.project.create({
     data: {
