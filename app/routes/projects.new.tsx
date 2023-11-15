@@ -4,19 +4,20 @@ import {
   json,
   redirect,
 } from "@remix-run/node";
-import {Controller, SubmitHandler, useForm} from "react-hook-form";
-import {zodResolver} from "@hookform/resolvers/zod";
 import {Button} from "~/@/components/ui/button";
 import {ensureAuthenticated} from "~/auth/helpers";
+import {useEffect, useRef} from "react";
 import {Save} from "lucide-react";
 import {MainContent} from "~/layouts/MainContent";
 import {getClients} from "~/db/get-clients";
-import {Form, Link, useLoaderData, useSubmit} from "@remix-run/react";
 import {
-  createProject,
-  createProjectSchema,
-  CreateProjectInput,
-} from "~/db/create-project";
+  Form,
+  Link,
+  useActionData,
+  useLoaderData,
+  useNavigation,
+} from "@remix-run/react";
+import {createProject, createProjectSchema} from "~/db/create-project";
 import {
   Select,
   SelectContent,
@@ -50,80 +51,47 @@ export async function loader({request}: LoaderFunctionArgs) {
 }
 
 export default function NewProject() {
+  const navigation = useNavigation();
+  const errors = useActionData<typeof action>();
+  const nameRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
   const clients = useLoaderData<typeof loader>();
-  const submit = useSubmit();
-  const {handleSubmit, register, formState, control} =
-    useForm<CreateProjectInput>({
-      resolver: zodResolver(createProjectSchema),
-      defaultValues: {
-        name: "",
-        description: "",
-        clientId: undefined,
-        startingMonth: new Date().getMonth(),
-        startingYear: new Date().getFullYear(),
-        endingMonth: new Date().getMonth(),
-        endingYear: new Date().getFullYear(),
-      },
-    });
 
-  const onSubmit: SubmitHandler<CreateProjectInput> = (data, event) => {
-    submit(data, {method: "POST"});
-  };
+  const submitting = navigation.state === "submitting";
+
+  useEffect(() => {
+    if (!submitting && !errors) {
+      nameRef.current?.focus();
+      formRef.current?.reset();
+    }
+  }, [submitting, errors]);
 
   return (
     <MainContent align="center">
       <div className="max-w-md flex flex-col gap-8">
         <h1 className="text-4xl font-bold">New project</h1>
-        <Form
-          method="post"
-          className="flex flex-col gap-6"
-          onSubmit={handleSubmit(onSubmit)}
-        >
+        <Form ref={formRef} method="post" className="flex flex-col gap-6">
           <fieldset className="flex flex-col gap-1.5">
             <Label htmlFor="name">Name*</Label>
-            <Controller
-              control={control}
-              name="name"
-              render={({field}) => (
-                <Input
-                  id="name"
-                  autoComplete="off"
-                  type="text"
-                  name={field.name}
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-              )}
-            />
-
+            <Input id="name" type="text" name="name" ref={nameRef} />
             <span className="text-red-600 text-sm">
-              {formState.errors.name?.message}
+              {errors?.fieldErrors.name}
             </span>
           </fieldset>
           <fieldset className="flex flex-col gap-1.5">
             <Label htmlFor="client">Select the client*</Label>
-            <Controller
-              control={control}
-              name="clientId"
-              render={({field}) => (
-                <Select
-                  value={field.value}
-                  name={field.name}
-                  onValueChange={field.onChange}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {clients.map((c) => (
-                      <SelectItem value={c.id} key={c.id}>
-                        {c.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            />
+            <Select name="clientId">
+              <SelectTrigger>
+                <SelectValue placeholder="Select..." />
+              </SelectTrigger>
+              <SelectContent>
+                {clients.map((c) => (
+                  <SelectItem value={c.id} key={c.id}>
+                    {c.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <span className="text-zinc-500 text-sm">
               or{" "}
               <Link to="/clients/new" className="underline">
@@ -131,7 +99,7 @@ export default function NewProject() {
               </Link>
             </span>
             <span className="text-red-600 text-sm">
-              {formState.errors.clientId?.message}
+              {errors?.fieldErrors.clientId}
             </span>
           </fieldset>
           <fieldset className="flex flex-col gap-1.5">
@@ -141,138 +109,109 @@ export default function NewProject() {
             </span>
             <Textarea
               id="description"
+              name="description"
               className="h-52 w-96"
-              {...register("description")}
             />
             <span className="text-red-600 text-sm">
-              {formState.errors.description?.message}
+              {errors?.fieldErrors.description}
             </span>
           </fieldset>
           <fieldset className="flex flex-col gap-1.5 flex-auto">
-            <Label htmlFor="">From*</Label>
+            <Label>From*</Label>
             <div className="flex gap-2">
-              <Controller
-                control={control}
+              <Select
                 name="startingMonth"
-                render={({field}) => (
-                  <Select
-                    name={field.name}
-                    value={field.value.toString()}
-                    onValueChange={field.onChange}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="0">January</SelectItem>
-                      <SelectItem value="1">February</SelectItem>
-                      <SelectItem value="2">March</SelectItem>
-                      <SelectItem value="3">April</SelectItem>
-                      <SelectItem value="4">May</SelectItem>
-                      <SelectItem value="5">June</SelectItem>
-                      <SelectItem value="6">July</SelectItem>
-                      <SelectItem value="7">August</SelectItem>
-                      <SelectItem value="8">September</SelectItem>
-                      <SelectItem value="9">October</SelectItem>
-                      <SelectItem value="10">November</SelectItem>
-                      <SelectItem value="11">December</SelectItem>
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-              <Controller
-                control={control}
+                defaultValue={new Date().getMonth().toString()}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="0">January</SelectItem>
+                  <SelectItem value="1">February</SelectItem>
+                  <SelectItem value="2">March</SelectItem>
+                  <SelectItem value="3">April</SelectItem>
+                  <SelectItem value="4">May</SelectItem>
+                  <SelectItem value="5">June</SelectItem>
+                  <SelectItem value="6">July</SelectItem>
+                  <SelectItem value="7">August</SelectItem>
+                  <SelectItem value="8">September</SelectItem>
+                  <SelectItem value="9">October</SelectItem>
+                  <SelectItem value="10">November</SelectItem>
+                  <SelectItem value="11">December</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select
                 name="startingYear"
-                render={({field}) => (
-                  <Select
-                    name={field.name}
-                    value={field.value.toString()}
-                    onValueChange={field.onChange}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Array(15)
-                        .fill(undefined)
-                        .map((_, index) => (
-                          <SelectItem
-                            key={index}
-                            value={(
-                              new Date().getFullYear() - index
-                            ).toString()}
-                          >
-                            {new Date().getFullYear() - index}
-                          </SelectItem>
-                        ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
+                defaultValue={new Date().getFullYear().toString()}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {Array(15)
+                    .fill(undefined)
+                    .map((_, index) => (
+                      <SelectItem
+                        key={index}
+                        value={(new Date().getFullYear() - index).toString()}
+                      >
+                        {new Date().getFullYear() - index}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
             </div>
           </fieldset>
           <fieldset className="flex flex-col gap-1.5 flex-auto">
-            <Label>To</Label>
+            <Label htmlFor="">To</Label>
             <div className="flex gap-2">
-              <Controller
+              <Select
                 name="endingMonth"
-                control={control}
-                render={({field}) => (
-                  <Select
-                    name={field.name}
-                    value={field.value?.toString()}
-                    onValueChange={field.onChange}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="0">January</SelectItem>
-                      <SelectItem value="1">February</SelectItem>
-                      <SelectItem value="2">March</SelectItem>
-                      <SelectItem value="3">April</SelectItem>
-                      <SelectItem value="4">May</SelectItem>
-                      <SelectItem value="5">June</SelectItem>
-                      <SelectItem value="6">July</SelectItem>
-                      <SelectItem value="7">August</SelectItem>
-                      <SelectItem value="8">September</SelectItem>
-                      <SelectItem value="9">October</SelectItem>
-                      <SelectItem value="10">November</SelectItem>
-                      <SelectItem value="11">December</SelectItem>
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-              <Controller
+                defaultValue={new Date().getMonth().toString()}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="0">January</SelectItem>
+                  <SelectItem value="1">February</SelectItem>
+                  <SelectItem value="2">March</SelectItem>
+                  <SelectItem value="3">April</SelectItem>
+                  <SelectItem value="4">May</SelectItem>
+                  <SelectItem value="5">June</SelectItem>
+                  <SelectItem value="6">July</SelectItem>
+                  <SelectItem value="7">August</SelectItem>
+                  <SelectItem value="8">September</SelectItem>
+                  <SelectItem value="9">October</SelectItem>
+                  <SelectItem value="10">November</SelectItem>
+                  <SelectItem value="11">December</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select
                 name="endingYear"
-                control={control}
-                render={({field}) => (
-                  <Select
-                    name={field.name}
-                    value={field.value?.toString()}
-                    onValueChange={field.onChange}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Array(15)
-                        .fill(undefined)
-                        .map((_, index) => (
-                          <SelectItem
-                            key={index}
-                            value={(
-                              new Date().getFullYear() - index
-                            ).toString()}
-                          >
-                            {new Date().getFullYear() - index}
-                          </SelectItem>
-                        ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
+                defaultValue={new Date().getFullYear().toString()}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {Array(15)
+                    .fill(undefined)
+                    .map((_, index) => (
+                      <SelectItem
+                        key={index}
+                        value={(new Date().getFullYear() - index).toString()}
+                      >
+                        {new Date().getFullYear() - index}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
             </div>
+            <span className="text-red-600 text-sm">
+              {errors?.fieldErrors.endDate}
+            </span>
           </fieldset>
           <Button
             type="submit"

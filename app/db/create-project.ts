@@ -21,8 +21,22 @@ export const createProjectSchema = z
       .max(new Date().getFullYear())
       .optional(),
     clientId: z.string().uuid(),
+    endDate: z.undefined(),
   })
-  .strict();
+  .strict()
+  .superRefine((input, ctx) => {
+    if (input.endingYear && input.endingMonth) {
+      const startDate = new Date(input.startingYear, input.startingMonth);
+      const endDate = new Date(input.endingYear, input.endingMonth);
+
+      if (endDate < startDate)
+        ctx.addIssue({
+          code: "invalid_date",
+          message: "End date cannot be earlier than the start date",
+          path: ["endDate"],
+        });
+    }
+  });
 
 export type CreateProjectInput = z.infer<typeof createProjectSchema>;
 
