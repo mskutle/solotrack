@@ -1,7 +1,7 @@
-import type { ReactNode } from "react";
-import { MainNavigation } from "./MainNavigation";
-import type { SerializeFrom } from "@remix-run/node";
-import type { User } from "@prisma/client";
+import type {ReactNode} from "react";
+import type {SerializeFrom} from "@remix-run/node";
+import type {User} from "@prisma/client";
+import {MainNavigation} from "./MainNavigation";
 
 type Props = {
   children: ReactNode;

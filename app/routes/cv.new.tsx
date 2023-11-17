@@ -3,17 +3,19 @@ import {
   type SerializeFrom,
   type LoaderFunctionArgs,
 } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
-import { CvForm } from "~/cv/CvForm";
-import { ensureAuthenticated } from "~/auth/helpers";
-import { type ProjectList, getProjectList } from "~/db/get-project-list";
-import { MainContent } from "~/layouts/MainContent";
-import { CvPreview } from "~/cv/CvPreview";
-import { useState } from "react";
+import {useLoaderData} from "@remix-run/react";
+import {CvForm} from "~/cv/CvForm";
+import {ensureAuthenticated} from "~/auth/helpers";
+import {type ProjectList, getProjectList} from "~/db/get-project-list";
+import {MainContent} from "~/layouts/MainContent";
+import {CvPreview} from "~/cv/CvPreview";
+import {useState} from "react";
+import {getPersonalTeam} from "~/db/get-personal-team";
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({request}: LoaderFunctionArgs) {
   const user = await ensureAuthenticated(request);
-  const projects = await getProjectList(user.id);
+  const team = await getPersonalTeam(user.id);
+  const projects = await getProjectList(team.id);
 
   return json(projects);
 }
@@ -24,7 +26,7 @@ export type Cv = {
 
 export default function NewCv() {
   const projects = useLoaderData<typeof loader>();
-  const [cv, setCv] = useState<Cv>({ projects });
+  const [cv, setCv] = useState<Cv>({projects});
 
   return (
     <MainContent>

@@ -9,10 +9,11 @@ import {Label} from "~/@/components/ui/label";
 import {Input} from "~/@/components/ui/input";
 import {MainContent} from "~/layouts/MainContent";
 import {createClient} from "~/db/create-client";
+import {getPersonalTeam} from "~/db/get-personal-team";
 
 export async function action({request}: ActionFunctionArgs) {
   const user = await ensureAuthenticated(request);
-
+  const team = await getPersonalTeam(user.id);
   const formData = await request.formData();
   const validationResult = createNewClientSchema.safeParse(
     Object.fromEntries(formData)
@@ -22,7 +23,7 @@ export async function action({request}: ActionFunctionArgs) {
     return json({errors: validationResult.error.flatten()}, {status: 400});
   }
 
-  await createClient(user.id, validationResult.data.name);
+  await createClient(team.id, validationResult.data.name);
   return redirect(".");
 }
 

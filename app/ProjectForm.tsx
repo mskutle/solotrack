@@ -1,9 +1,9 @@
-import type { Client } from "@prisma/client";
-import type { SerializeFrom } from "@remix-run/node";
-import { Form, Link, useNavigation } from "@remix-run/react";
-import { forwardRef, useEffect, useRef } from "react";
-import { Input } from "./@/components/ui/input";
-import { Label } from "./@/components/ui/label";
+import type {Client} from "@prisma/client";
+import type {SerializeFrom} from "@remix-run/node";
+import {Form, Link, useNavigation} from "@remix-run/react";
+import {useEffect, useRef} from "react";
+import {Input} from "./@/components/ui/input";
+import {Label} from "./@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -11,30 +11,43 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./@/components/ui/select";
-import { Textarea } from "./@/components/ui/textarea";
-// import { Switch } from "./@/components/ui/switch";
+import {Textarea} from "./@/components/ui/textarea";
+import {Button} from "./@/components/ui/button";
+import {Save} from "lucide-react";
+import {saveProjectSchema, SaveProjectInput} from "./db/save-project";
+import {ZodError, typeToFlattenedError} from "zod";
 
 type Props = {
-  id: string;
   clients: SerializeFrom<Client>[];
+  errors?: SerializeFrom<typeToFlattenedError<SaveProjectInput>>;
 };
 
-export const ProjectForm = forwardRef<HTMLFormElement, Props>((props, ref) => {
+export function ProjectForm(props: Props) {
+  const {errors, clients} = props;
   const nameRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
   const navigation = useNavigation();
-  const submitting = navigation.state == "submitting";
+  const submitting = navigation.state === "submitting";
 
   useEffect(() => {
-    if (!submitting) {
+    if (!submitting && !errors) {
+      formRef.current?.reset();
       nameRef.current?.focus();
     }
-  }, [submitting]);
+  }, [submitting, errors]);
 
   return (
-    <Form method="post" className="flex flex-col gap-6" id={props.id} ref={ref}>
+    <Form ref={formRef} method="post" className="flex flex-col gap-6">
       <fieldset className="flex flex-col gap-1.5">
         <Label htmlFor="name">Name*</Label>
-        <Input id="name" type="text" name="name" ref={nameRef} />
+        <Input
+          id="name"
+          type="text"
+          name="name"
+          ref={nameRef}
+          autoComplete="off"
+        />
+        <span className="text-red-600 text-sm">{errors?.fieldErrors.name}</span>
       </fieldset>
       <fieldset className="flex flex-col gap-1.5">
         <Label htmlFor="client">Select the client*</Label>
@@ -43,7 +56,7 @@ export const ProjectForm = forwardRef<HTMLFormElement, Props>((props, ref) => {
             <SelectValue placeholder="Select..." />
           </SelectTrigger>
           <SelectContent>
-            {props.clients.map((c) => (
+            {clients.map((c) => (
               <SelectItem value={c.id} key={c.id}>
                 {c.name}
               </SelectItem>
@@ -56,6 +69,9 @@ export const ProjectForm = forwardRef<HTMLFormElement, Props>((props, ref) => {
             create a new one
           </Link>
         </span>
+        <span className="text-red-600 text-sm">
+          {errors?.fieldErrors.clientId}
+        </span>
       </fieldset>
       <fieldset className="flex flex-col gap-1.5">
         <Label htmlFor="description">Description*</Label>
@@ -63,9 +79,12 @@ export const ProjectForm = forwardRef<HTMLFormElement, Props>((props, ref) => {
           Describe the project and what you did.
         </span>
         <Textarea id="description" name="description" className="h-52 w-96" />
+        <span className="text-red-600 text-sm">
+          {errors?.fieldErrors.description}
+        </span>
       </fieldset>
       <fieldset className="flex flex-col gap-1.5 flex-auto">
-        <Label htmlFor="">From*</Label>
+        <Label>From*</Label>
         <div className="flex gap-2">
           <Select
             name="startingMonth"
@@ -157,7 +176,18 @@ export const ProjectForm = forwardRef<HTMLFormElement, Props>((props, ref) => {
             </SelectContent>
           </Select>
         </div>
+        <span className="text-red-600 text-sm">
+          {errors?.fieldErrors.endDate}
+        </span>
       </fieldset>
+      <Button
+        type="submit"
+        variant="default"
+        className="self-end flex items-center gap-2"
+      >
+        <Save />
+        <span>Save</span>
+      </Button>
     </Form>
   );
-});
+}

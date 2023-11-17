@@ -1,7 +1,7 @@
-import type { User } from "@prisma/client";
-import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
-import type { SerializeFrom } from "@remix-run/node";
-import { NavLink, useNavigate } from "@remix-run/react";
+import type {User} from "@prisma/client";
+import {DropdownMenu} from "@radix-ui/react-dropdown-menu";
+import type {SerializeFrom} from "@remix-run/node";
+import {NavLink, useNavigate} from "@remix-run/react";
 import {
   Award,
   Briefcase,
@@ -10,13 +10,13 @@ import {
   LogOut,
   Scroll,
 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "~/@/components/ui/avatar";
+import {Avatar, AvatarFallback, AvatarImage} from "~/@/components/ui/avatar";
 import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/@/components/ui/dropdown-menu";
-import { cn } from "~/@/lib/utils";
+import {cn} from "~/@/lib/utils";
 
 type Props = {
   user: SerializeFrom<User>;
@@ -33,7 +33,7 @@ export function MainNavigation(props: Props) {
         <li>
           <NavLink
             to="/dashboard"
-            className={({ isActive }) =>
+            className={({isActive}) =>
               cn(
                 "flex items-center gap-4 px-2 py-[5px] rounded-md",
                 isActive ? "bg-black text-white" : "hover:bg-stone-200"
@@ -47,7 +47,7 @@ export function MainNavigation(props: Props) {
         <li>
           <NavLink
             to="/projects"
-            className={({ isActive }) =>
+            className={({isActive}) =>
               cn(
                 "flex items-center gap-4 px-2 py-[5px] rounded-md",
                 isActive ? "bg-black text-white" : "hover:bg-stone-200"
@@ -61,7 +61,7 @@ export function MainNavigation(props: Props) {
         <li>
           <NavLink
             to="/clients"
-            className={({ isActive }) =>
+            className={({isActive}) =>
               cn(
                 "flex items-center gap-4 px-2 py-[5px] rounded-md",
                 isActive ? "bg-black text-white" : "hover:bg-stone-200"
@@ -75,7 +75,7 @@ export function MainNavigation(props: Props) {
         <li>
           <NavLink
             to="/courses-and-certifications"
-            className={({ isActive }) =>
+            className={({isActive}) =>
               cn(
                 "flex items-center gap-4 px-2 py-[5px] rounded-md",
                 isActive ? "bg-black text-white" : "hover:bg-stone-200"
@@ -89,7 +89,7 @@ export function MainNavigation(props: Props) {
         <li>
           <NavLink
             to="/cv"
-            className={({ isActive }) =>
+            className={({isActive}) =>
               cn(
                 "flex items-center gap-4 px-2 py-[5px] rounded-md",
                 isActive ? "bg-black text-white" : "hover:bg-stone-200"

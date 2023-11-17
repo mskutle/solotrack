@@ -10,7 +10,8 @@ datasource db {
 model Client {
   id        String    @id
   name      String
-  userId    String
+  teamId    String
+  team      Team      @relation(fields: [teamId], references: [id])
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
@@ -25,27 +26,60 @@ model Project {
   startedAt   DateTime
   endedAt     DateTime?
   description String
+  teamId      String
+  team        Team      @relation(fields: [teamId], references: [id])
+  clientId    String
+  client      Client    @relation(fields: [clientId], references: [id])
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   deletedAt   DateTime?
-  ownerId     String
-  owner       User      @relation(fields: [ownerId], references: [id])
-  clientId    String
-  client      Client    @relation(fields: [clientId], references: [id])
 
   @@map("projects")
+}
+
+model Team {
+  id         String     @id
+  name       String
+  members    User[]
+  roles      TeamRole[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  deletedAt  DateTime?
+  projects   Project[]
+  clients    Client[]
+  isPersonal Boolean
+
+  @@map("teams")
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+model TeamRole {
+  userId    String
+  teamId    String
+  team      Team      @relation(fields: [teamId], references: [id])
+  role      Role      @default(MEMBER)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@unique([userId, teamId, role])
+  @@map("user_roles")
 }
 
 model User {
   id        String    @id
   email     String    @unique
+  teams     Team[]
   firstName String
   lastName  String
   photoUrl  String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
-  projects  Project[]
 
   @@map("users")
 }

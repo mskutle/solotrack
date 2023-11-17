@@ -1,22 +1,25 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { NavLink, Outlet, useLoaderData, useNavigate } from "@remix-run/react";
-import { Plus } from "lucide-react";
-import { Button } from "~/@/components/ui/button";
-import { ensureAuthenticated } from "~/auth/helpers";
-import { getClients } from "~/db/get-clients";
-import { MasterDetail } from "~/layouts/MasterDetail";
-import { PageContainer } from "~/layouts/PageContainer";
+import type {LoaderFunctionArgs} from "@remix-run/node";
+import {json} from "@remix-run/node";
+import {NavLink, Outlet, useLoaderData, useNavigate} from "@remix-run/react";
+import {Plus} from "lucide-react";
+import {Button} from "~/@/components/ui/button";
+import {ensureAuthenticated} from "~/auth/helpers";
+import {getClients} from "~/db/get-clients";
+import {getPersonalTeam} from "~/db/get-personal-team";
+import {MasterDetail} from "~/layouts/MasterDetail";
+import {PageContainer} from "~/layouts/PageContainer";
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({request}: LoaderFunctionArgs) {
   const user = await ensureAuthenticated(request);
-  const userClients = await getClients(user.id);
-  return json({ user, clients: userClients });
+  const team = await getPersonalTeam(user.id);
+  const clients = await getClients(team.id);
+
+  return json({user, clients});
 }
 
 export default function Clients() {
   const navigate = useNavigate();
-  const { user, clients } = useLoaderData<typeof loader>();
+  const {user, clients} = useLoaderData<typeof loader>();
 
   return (
     <PageContainer user={user}>
@@ -31,7 +34,7 @@ export default function Clients() {
           <MasterDetail.MasterList>
             {clients.map((client) => (
               <NavLink to={client.id} key={client.id}>
-                {({ isActive }) => (
+                {({isActive}) => (
                   <MasterDetail.MasterListItem highlight={isActive}>
                     <MasterDetail.MasterListItem.Heading>
                       {client.name}
