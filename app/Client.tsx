@@ -1,14 +1,14 @@
-import type { SerializeFrom } from "@remix-run/node";
-import { Pencil, Trash2 } from "lucide-react";
-import { Button } from "./@/components/ui/button";
-import type { Client } from "@prisma/client";
+import type {SerializeFrom} from "@remix-run/node";
+import {Pencil, Trash2} from "lucide-react";
+import {Button} from "./@/components/ui/button";
+import type {Client} from "@prisma/client";
 
 type Props = {
   client: SerializeFrom<Client>;
 };
 
 export function Client(props: Props) {
-  const { client } = props;
+  const {client} = props;
   return (
     <div className="flex flex-col gap-6">
       <div className="flex justify-between bg-zinc-50 p-8">

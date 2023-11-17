@@ -1,0 +1,29 @@
+@font-face {
+  font-family: Geist;
+  src: url(/fonts/Geist/Geist-Light.woff2);
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: Geist;
+  src: url(/fonts/Geist/Geist-Regular.woff2);
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: Geist;
+  src: url(/fonts/Geist/Geist-SemiBold.woff2);
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: Geist;
+  src: url(/fonts/Geist/Geist-Black.woff2);
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: Geist;
+  src: url(/fonts/Geist/Geist-UltraBlack.woff2);
+  font-weight: 900;
+}

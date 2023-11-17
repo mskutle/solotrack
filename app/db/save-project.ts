@@ -1,13 +1,15 @@
 import type {Project} from "@prisma/client";
 import {z} from "zod";
+import isEmpty from "lodash/isEmpty";
 import {prisma} from "./prisma-client";
 import {v4 as uuid} from "uuid";
+import invariant from "tiny-invariant";
 
 export const saveProjectSchema = z
   .object({
     id: z.string().optional(),
-    name: z.string().min(1),
-    description: z.string().min(1),
+    name: z.string().min(1, {message: "Name is required"}),
+    description: z.string().min(1, {message: "Description is required"}),
     startingMonth: z.coerce.number().int().min(0).max(11),
     startingYear: z.coerce
       .number()
@@ -21,7 +23,7 @@ export const saveProjectSchema = z
       .min(1000)
       .max(new Date().getFullYear())
       .optional(),
-    clientId: z.string().uuid(),
+    clientId: z.string().min(1, {message: "Client is required"}).uuid(),
     endDate: z.undefined(),
   })
   .strict()
@@ -45,7 +47,9 @@ export async function saveProject(
   teamId: string,
   input: SaveProjectInput
 ): Promise<Project> {
-  const projectId = input.id ?? uuid();
+  const projectId = isEmpty(input.id) ? uuid() : input.id;
+  invariant(projectId);
+
   return prisma.project.upsert({
     where: {id: projectId},
     update: {

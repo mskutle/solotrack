@@ -8,7 +8,9 @@ import {
   GanttChartSquare,
   Home,
   LogOut,
+  PersonStanding,
   Scroll,
+  User as UserIcon,
 } from "lucide-react";
 import {Avatar, AvatarFallback, AvatarImage} from "~/@/components/ui/avatar";
 import {
@@ -98,6 +100,20 @@ export function MainNavigation(props: Props) {
           >
             <Scroll className="w-4 h-4" />
             <span className="whitespace-nowrap">CV</span>
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="/profile"
+            className={({isActive}) =>
+              cn(
+                "flex items-center gap-4 px-2 py-[5px] rounded-md",
+                isActive ? "bg-black text-white" : "hover:bg-stone-200"
+              )
+            }
+          >
+            <UserIcon className="w-4 h-4" />
+            <span>Profile</span>
           </NavLink>
         </li>
       </ul>

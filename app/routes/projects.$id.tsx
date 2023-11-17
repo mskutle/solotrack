@@ -1,19 +1,19 @@
-import { json, type LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
-import { z } from "zod";
-import { Project } from "~/Project";
-import { ensureAuthenticated } from "~/auth/helpers";
-import { getProjectById } from "~/db/get-project-by-id";
-import { MainContent } from "~/layouts/MainContent";
+import {json, type LoaderFunctionArgs} from "@remix-run/node";
+import {useLoaderData} from "@remix-run/react";
+import {z} from "zod";
+import {Project} from "~/Project";
+import {ensureAuthenticated} from "~/auth/helpers";
+import {getProjectById} from "~/db/get-project-by-id";
+import {MainContent} from "~/layouts/MainContent";
 
-export async function loader({ request, params }: LoaderFunctionArgs) {
+export async function loader({request, params}: LoaderFunctionArgs) {
   await ensureAuthenticated(request);
   const projectId = z.string().parse(params.id);
 
   const project = await getProjectById(projectId);
 
   if (!project) {
-    throw new Response(null, { status: 404 });
+    throw new Response(null, {status: 404});
   }
 
   return json(project);
@@ -22,7 +22,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 export default function ProjectDetails() {
   const project = useLoaderData<typeof loader>();
   return (
-    <MainContent align="center">
+    <MainContent align="center" padding="none">
       <Project key={project.id} project={project} />
     </MainContent>
   );

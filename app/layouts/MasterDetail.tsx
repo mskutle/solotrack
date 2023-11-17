@@ -1,6 +1,6 @@
-import { ScrollArea } from "~/@/components/ui/scroll-area";
-import type { ReactNode } from "react";
-import { cn } from "~/@/lib/utils";
+import {ScrollArea} from "~/@/components/ui/scroll-area";
+import type {ReactNode} from "react";
+import {cn} from "~/@/lib/utils";
 
 type Props = {
   children: ReactNode;
@@ -21,6 +21,10 @@ type ListItemProps = {
 };
 
 type ListItemHeadingProps = {
+  children: ReactNode;
+};
+
+type ListItemDescriptionProps = {
   children: ReactNode;
   highlight?: boolean;
 };
@@ -60,8 +64,8 @@ const ListItem = (props: ListItemProps) => (
   </li>
 );
 
-const Header = (props: HeaderProps) => {
-  const { color = "gray" } = props;
+const MasterHeader = (props: HeaderProps) => {
+  const {color = "gray"} = props;
   return (
     <header
       className={cn(
@@ -80,15 +84,15 @@ const Detail = (props: Props) => (
 );
 
 const DetailContent = (props: DetailContentProps) => {
-  const { children } = props;
+  const {children} = props;
   return <main className={cn("w-full grow overflow-y-auto")}>{children}</main>;
 };
 
-const ListItemHeading = (props: Props) => (
+const ListItemHeading = (props: ListItemHeadingProps) => (
   <span className="font-semibold">{props.children}</span>
 );
 
-const ListItemDescription = (props: ListItemHeadingProps) => (
+const ListItemDescription = (props: ListItemDescriptionProps) => (
   <p
     className={cn(
       "text-xs whitespace-pre-wrap line-clamp-2",
@@ -99,8 +103,9 @@ const ListItemDescription = (props: ListItemHeadingProps) => (
   </p>
 );
 
+Master.Header = MasterHeader;
+
 MasterDetail.Master = Master;
-MasterDetail.MasterHeader = Header;
 MasterDetail.MasterList = List;
 MasterDetail.MasterListItem = ListItem;
 
@@ -108,5 +113,5 @@ ListItem.Heading = ListItemHeading;
 ListItem.Description = ListItemDescription;
 
 MasterDetail.Detail = Detail;
-MasterDetail.DetailHeader = Header;
+MasterDetail.DetailHeader = MasterHeader;
 MasterDetail.DetailContent = DetailContent;

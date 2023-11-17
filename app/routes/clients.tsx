@@ -25,12 +25,12 @@ export default function Clients() {
     <PageContainer user={user}>
       <MasterDetail>
         <MasterDetail.Master>
-          <MasterDetail.MasterHeader>
+          <MasterDetail.Master.Header>
             <h2>All clients</h2>
             <Button variant="ghost" size="icon" onClick={() => navigate("new")}>
               <Plus />
             </Button>
-          </MasterDetail.MasterHeader>
+          </MasterDetail.Master.Header>
           <MasterDetail.MasterList>
             {clients.map((client) => (
               <NavLink to={client.id} key={client.id}>

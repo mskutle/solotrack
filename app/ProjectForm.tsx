@@ -1,4 +1,4 @@
-import type {Client} from "@prisma/client";
+import type {Client, Project} from "@prisma/client";
 import type {SerializeFrom} from "@remix-run/node";
 import {Form, Link, useNavigation} from "@remix-run/react";
 import {useEffect, useRef} from "react";
@@ -14,30 +14,45 @@ import {
 import {Textarea} from "./@/components/ui/textarea";
 import {Button} from "./@/components/ui/button";
 import {Save} from "lucide-react";
-import {saveProjectSchema, SaveProjectInput} from "./db/save-project";
-import {ZodError, typeToFlattenedError} from "zod";
+import {SaveProjectInput} from "./db/save-project";
+import {typeToFlattenedError} from "zod";
 
 type Props = {
   clients: SerializeFrom<Client>[];
   errors?: SerializeFrom<typeToFlattenedError<SaveProjectInput>>;
+  defaultValues?: SerializeFrom<Project>;
+};
+
+type FormData = {
+  projectId?: string;
+  name: string;
+  clientId: string;
+  description: string;
+  startingMonth: string;
+  startingYear: string;
+  endingMonth: string;
+  endingYear: string;
 };
 
 export function ProjectForm(props: Props) {
-  const {errors, clients} = props;
+  const {errors, clients, defaultValues} = props;
   const nameRef = useRef<HTMLInputElement>(null);
-  const formRef = useRef<HTMLFormElement>(null);
   const navigation = useNavigation();
   const submitting = navigation.state === "submitting";
 
+  const formData = mapProjectToFormData(defaultValues);
+
+  console.log({formData});
+
   useEffect(() => {
     if (!submitting && !errors) {
-      formRef.current?.reset();
       nameRef.current?.focus();
     }
-  }, [submitting, errors]);
+  }, [submitting]);
 
   return (
-    <Form ref={formRef} method="post" className="flex flex-col gap-6">
+    <Form method="post" className="flex flex-col gap-6">
+      <input type="hidden" name="id" value={formData.projectId} />
       <fieldset className="flex flex-col gap-1.5">
         <Label htmlFor="name">Name*</Label>
         <Input
@@ -46,12 +61,13 @@ export function ProjectForm(props: Props) {
           name="name"
           ref={nameRef}
           autoComplete="off"
+          defaultValue={formData.name}
         />
         <span className="text-red-600 text-sm">{errors?.fieldErrors.name}</span>
       </fieldset>
       <fieldset className="flex flex-col gap-1.5">
         <Label htmlFor="client">Select the client*</Label>
-        <Select name="clientId">
+        <Select name="clientId" defaultValue={formData.clientId}>
           <SelectTrigger>
             <SelectValue placeholder="Select..." />
           </SelectTrigger>
@@ -78,7 +94,12 @@ export function ProjectForm(props: Props) {
         <span className="text-zinc-500 text-sm">
           Describe the project and what you did.
         </span>
-        <Textarea id="description" name="description" className="h-52 w-96" />
+        <Textarea
+          id="description"
+          name="description"
+          className="h-52 w-96"
+          defaultValue={formData.description}
+        />
         <span className="text-red-600 text-sm">
           {errors?.fieldErrors.description}
         </span>
@@ -86,10 +107,7 @@ export function ProjectForm(props: Props) {
       <fieldset className="flex flex-col gap-1.5 flex-auto">
         <Label>From*</Label>
         <div className="flex gap-2">
-          <Select
-            name="startingMonth"
-            defaultValue={new Date().getMonth().toString()}
-          >
+          <Select name="startingMonth" defaultValue={formData.startingMonth}>
             <SelectTrigger>
               <SelectValue placeholder="Select..." />
             </SelectTrigger>
@@ -108,10 +126,7 @@ export function ProjectForm(props: Props) {
               <SelectItem value="11">December</SelectItem>
             </SelectContent>
           </Select>
-          <Select
-            name="startingYear"
-            defaultValue={new Date().getFullYear().toString()}
-          >
+          <Select name="startingYear" defaultValue={formData.startingYear}>
             <SelectTrigger>
               <SelectValue placeholder="Select..." />
             </SelectTrigger>
@@ -133,10 +148,7 @@ export function ProjectForm(props: Props) {
       <fieldset className="flex flex-col gap-1.5 flex-auto">
         <Label htmlFor="">To</Label>
         <div className="flex gap-2">
-          <Select
-            name="endingMonth"
-            defaultValue={new Date().getMonth().toString()}
-          >
+          <Select name="endingMonth" defaultValue={formData.endingMonth}>
             <SelectTrigger>
               <SelectValue placeholder="Select..." />
             </SelectTrigger>
@@ -155,10 +167,7 @@ export function ProjectForm(props: Props) {
               <SelectItem value="11">December</SelectItem>
             </SelectContent>
           </Select>
-          <Select
-            name="endingYear"
-            defaultValue={new Date().getFullYear().toString()}
-          >
+          <Select name="endingYear" defaultValue={formData.endingYear}>
             <SelectTrigger>
               <SelectValue placeholder="Select..." />
             </SelectTrigger>
@@ -190,4 +199,26 @@ export function ProjectForm(props: Props) {
       </Button>
     </Form>
   );
+}
+
+function mapProjectToFormData(project?: SerializeFrom<Project>): FormData {
+  const startedAt = project?.startedAt
+    ? new Date(project.startedAt)
+    : new Date();
+  const endedAt = project?.endedAt ? new Date(project.endedAt) : new Date();
+  const startingMonth = startedAt.getMonth().toString();
+  const startingYear = startedAt.getFullYear().toString();
+  const endingMonth = endedAt.getMonth().toString();
+  const endingYear = endedAt.getFullYear().toString();
+
+  return {
+    projectId: project?.id,
+    name: project?.name ?? "",
+    clientId: project?.clientId ?? "",
+    description: project?.description ?? "",
+    startingMonth,
+    startingYear,
+    endingMonth,
+    endingYear,
+  };
 }

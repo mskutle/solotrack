@@ -25,9 +25,9 @@ export async function action({request}: ActionFunctionArgs) {
     return json(validationResult.error.flatten(), {status: 400});
   }
 
-  await saveProject(team.id, validationResult.data);
+  const project = await saveProject(team.id, validationResult.data);
 
-  return redirect(".");
+  return redirect(`/projects/${project.id}`);
 }
 
 export async function loader({request}: LoaderFunctionArgs) {

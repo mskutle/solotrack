@@ -1,70 +1,70 @@
-import type { DragEndEvent } from "@dnd-kit/core";
+import {Project} from "@prisma/client";
+import {SerializeFrom} from "@remix-run/node";
+import {Form} from "@remix-run/react";
+import {Input} from "~/@/components/ui/input";
+import {Label} from "~/@/components/ui/label";
 import {
-  DndContext,
-  KeyboardSensor,
-  PointerSensor,
-  closestCenter,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import {
-  SortableContext,
-  arrayMove,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import invariant from "tiny-invariant";
-import { SortableItem } from "./SortableItem";
-import type { Cv } from "~/routes/cv.new";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/@/components/ui/select";
+import {Switch} from "~/@/components/ui/switch";
+import {cn} from "~/@/lib/utils";
 
 type Props = {
-  cv: Cv;
-  onChange: (cv: Cv) => void;
+  projects: SerializeFrom<Project>[];
 };
 
 export function CvForm(props: Props) {
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
-
-  const items = props.cv.projects;
-
-  function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event;
-    invariant(over?.id, "over.id is null");
-
-    if (active.id !== over.id) {
-      const oldIndex = items.findIndex((x) => x.id === active.id);
-      const newIndex = items.findIndex((x) => x.id === over.id);
-
-      props.onChange({ projects: arrayMove(items, oldIndex, newIndex) });
-    }
-  }
-
   return (
-    <DndContext
-      sensors={sensors}
-      onDragEnd={handleDragEnd}
-      collisionDetection={closestCenter}
-    >
-      <SortableContext items={items} strategy={verticalListSortingStrategy}>
-        <div>
-          <h1 className="text-xl font-bold">Projects</h1>
-          <ul className="flex flex-col gap-2 mt-2">
-            {items.map((p) => (
-              <SortableItem
-                id={p.id}
-                key={p.id}
-                title={p.name}
-                subtitle={p.client.name}
-              />
-            ))}
-          </ul>
-        </div>
-      </SortableContext>
-    </DndContext>
+    <Form method="post" className="flex flex-col grow gap-8">
+      <fieldset className="max-w-xs">
+        <Label htmlFor="name">Name*</Label>
+        <Input type="text" name="name" autoComplete="off" />
+      </fieldset>
+      <fieldset className="max-w-xs">
+        <Label htmlFor="language">Language*</Label>
+        <Select name="language" defaultValue="nb">
+          <SelectTrigger id="language">
+            <SelectValue placeholder="Select..." />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="nb">
+              <div className="flex items-center gap-2">
+                <span>🇳🇴</span>
+                <span>Norwegian</span>
+              </div>
+            </SelectItem>
+            <SelectItem value="en">
+              <div className="flex items-center gap-2">
+                <span>🇬🇧</span>
+                <span>English</span>
+              </div>
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </fieldset>
+      <fieldset>
+        <h1 className="text-xl font-bold">Projects</h1>
+        <ul className="flex flex-col gap-2 mt-2">
+          {props.projects.map((project) => (
+            <li
+              key={project.id}
+              className={cn(
+                "flex gap-8 items-center justify-between bg-green-50 p-4"
+              )}
+            >
+              <div className="flex flex-col">
+                <span className="font-bold">{project.name}</span>
+                <span className="text-sm text-zinc-600">Some subtitle</span>
+              </div>
+              <Switch defaultChecked />
+            </li>
+          ))}
+        </ul>
+      </fieldset>
+    </Form>
   );
 }

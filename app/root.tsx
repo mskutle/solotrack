@@ -10,7 +10,7 @@ import "~/css/index.css";
 
 export default function App() {
   return (
-    <html lang="en" className="w-full h-full">
+    <html lang="en" className="w-full h-full font-geist">
       <head>
         <title>SoloTrack</title>
         <meta charSet="utf-8" />

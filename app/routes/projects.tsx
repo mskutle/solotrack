@@ -1,6 +1,6 @@
 import {json, type LoaderFunctionArgs} from "@remix-run/node";
 import {Link, NavLink, Outlet, useLoaderData} from "@remix-run/react";
-import {Plus} from "lucide-react";
+import {EditIcon, Pencil, Plus} from "lucide-react";
 import {Button} from "~/@/components/ui/button";
 import {ensureAuthenticated} from "~/auth/helpers";
 import {getPersonalTeam} from "~/db/get-personal-team";
@@ -23,14 +23,14 @@ export default function Projects() {
     <PageContainer user={user}>
       <MasterDetail>
         <MasterDetail.Master>
-          <MasterDetail.MasterHeader>
+          <MasterDetail.Master.Header>
             <h2>All projects</h2>
             <Button asChild variant="ghost" size="icon">
               <Link to="new">
                 <Plus />
               </Link>
             </Button>
-          </MasterDetail.MasterHeader>
+          </MasterDetail.Master.Header>
           <MasterDetail.MasterList>
             {projects.map((p) => (
               <NavLink to={p.id} key={p.id}>
