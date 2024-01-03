@@ -8,7 +8,7 @@ import {ensureAuthenticated} from "~/auth/helpers";
 import {type ProjectList, getProjectList} from "~/db/get-project-list";
 import {MainContent} from "~/layouts/MainContent";
 import {getPersonalTeam} from "~/db/get-personal-team";
-import {CvForm} from "~/cv/CvForm";
+import {CvForm} from "~/routes/cv/CvForm";
 
 export async function loader({request}: LoaderFunctionArgs) {
   const user = await ensureAuthenticated(request);

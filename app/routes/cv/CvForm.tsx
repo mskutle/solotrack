@@ -37,10 +37,10 @@ export function CvForm(props: Props) {
                 <span>Norwegian</span>
               </div>
             </SelectItem>
-            <SelectItem value="en">
+            <SelectItem value="en" disabled>
               <div className="flex items-center gap-2">
                 <span>🇬🇧</span>
-                <span>English</span>
+                <span>English (coming soon)</span>
               </div>
             </SelectItem>
           </SelectContent>
@@ -53,7 +53,7 @@ export function CvForm(props: Props) {
             <li
               key={project.id}
               className={cn(
-                "flex gap-8 items-center justify-between bg-green-50 p-4"
+                "flex gap-8 items-center justify-between bg-lime-50 p-4"
               )}
             >
               <div className="flex flex-col">

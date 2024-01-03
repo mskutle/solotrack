@@ -1,6 +1,6 @@
-import { cva, type VariantProps } from "class-variance-authority";
-import type { ReactNode } from "react";
-import { cn } from "~/@/lib/utils";
+import {cva, type VariantProps} from "class-variance-authority";
+import type {ReactNode} from "react";
+import {cn} from "~/@/lib/utils";
 
 interface Props extends VariantProps<typeof metricVariants> {
   children: ReactNode;
@@ -22,16 +22,16 @@ const metricVariants = cva("flex flex-col justify-center items-center p-8", {
 });
 
 export function Metric(props: Props) {
-  const { variant, children } = props;
-  return <div className={cn(metricVariants({ variant }))}>{children}</div>;
+  const {variant, children} = props;
+  return <div className={cn(metricVariants({variant}))}>{children}</div>;
 }
 
-const MetricTitle = ({ children }: { children: ReactNode }) => (
-  <h2 className={cn("text-sm")}>{children}</h2>
+const MetricTitle = ({children}: {children: ReactNode}) => (
+  <h2 className={cn("text-sm text-center")}>{children}</h2>
 );
 
-const MetricValue = ({ children }: { children: ReactNode }) => (
-  <span className="text-5xl">{children}</span>
+const MetricValue = ({children}: {children: ReactNode}) => (
+  <span className="text-5xl text-center">{children}</span>
 );
 
 Metric.Title = MetricTitle;

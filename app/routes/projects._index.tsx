@@ -1,7 +1,7 @@
-import { Link } from "@remix-run/react";
-import { Plus } from "lucide-react";
-import { Button } from "~/@/components/ui/button";
-import { MainContent } from "~/layouts/MainContent";
+import {Link} from "@remix-run/react";
+import {Plus} from "lucide-react";
+import {Button} from "~/@/components/ui/button";
+import {MainContent} from "~/layouts/MainContent";
 
 export default function DefaultProjectDetails() {
   return (

@@ -11,6 +11,7 @@ import {ensureAuthenticated} from "~/auth/helpers";
 import {getClients} from "~/db/get-clients";
 import {getPersonalTeam} from "~/db/get-personal-team";
 import {getProjectById} from "~/db/get-project-by-id";
+import {getAllSkills} from "~/db/get-skills";
 import {saveProject, saveProjectSchema} from "~/db/save-project";
 import {MainContent} from "~/layouts/MainContent";
 
@@ -38,18 +39,19 @@ export async function loader({request, params}: LoaderFunctionArgs) {
   const user = await ensureAuthenticated(request);
   const team = await getPersonalTeam(user.id);
 
-  const [clients, project] = await Promise.all([
+  const [clients, project, skills] = await Promise.all([
     getClients(team.id),
     getProjectById(projectId),
+    getAllSkills(),
   ]);
 
   if (!project) throw new Response("not found", {status: 404});
 
-  return json({clients, project});
+  return json({clients, project, skills});
 }
 
 export default function EditProject() {
-  const {clients, project} = useLoaderData<typeof loader>();
+  const {clients, project, skills} = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
 
   return (
@@ -58,6 +60,7 @@ export default function EditProject() {
         <h1 className="text-4xl font-bold">Edit project</h1>
         <ProjectForm
           clients={clients}
+          skills={skills}
           errors={errors}
           defaultValues={project}
         />

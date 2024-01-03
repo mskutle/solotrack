@@ -1,8 +1,8 @@
 import {json, type LoaderFunctionArgs} from "@remix-run/node";
 import {useLoaderData} from "@remix-run/react";
 import {ensureAuthenticated} from "~/auth/helpers";
-import {Greeting} from "~/dashboard/Greeting";
-import {Metrics} from "~/dashboard/Metrics";
+import {Greeting} from "~/routes/dashboard/Greeting";
+import {Metrics} from "~/routes/dashboard/Metrics";
 import {getMetrics} from "~/db/get-dashboard-metrics";
 import {getPersonalTeam} from "~/db/get-personal-team";
 import {MainContent} from "~/layouts/MainContent";

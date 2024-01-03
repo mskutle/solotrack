@@ -3,9 +3,9 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build && vite build --ssr",
-    "start": "remix-serve ./build/index.js",
+    "dev": "remix vite:dev",
+    "build": "remix vite:build",
+    "start": "remix-serve ./build/server/index.js",
     "typecheck": "tsc",
     "db:pull": "prisma db pull",
     "db:generate:client": "prisma generate",
@@ -13,11 +13,16 @@
     "db:seed": "prisma db seed"
   },
   "dependencies": {
+    "@remix-run/css-bundle": "^2.4.1",
+    "@remix-run/node": "^2.4.1",
+    "@remix-run/react": "^2.4.1",
+    "@remix-run/serve": "^2.4.1",
     "@dnd-kit/core": "^6.0.8",
     "@dnd-kit/sortable": "^7.0.2",
     "@hookform/resolvers": "^3.1.1",
     "@prisma/client": "^5.6.0",
     "@radix-ui/react-avatar": "^1.0.3",
+    "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-dropdown-menu": "^2.0.5",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-popover": "^1.0.6",
@@ -26,12 +31,9 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-switch": "^1.0.3",
     "@react-pdf/renderer": "^3.1.12",
-    "@remix-run/css-bundle": "^2.3.0",
-    "@remix-run/node": "^2.3.0",
-    "@remix-run/react": "^2.3.0",
-    "@remix-run/serve": "^2.3.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "cmdk": "^0.2.0",
     "date-fns": "^2.30.0",
     "isbot": "^3.6.8",
     "linkify-react": "^4.1.1",
@@ -53,8 +55,8 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@remix-run/dev": "^2.3.0",
-    "@remix-run/eslint-config": "^2.3.0",
+    "@remix-run/dev": "^2.4.1",
+    "@remix-run/eslint-config": "^2.4.1",
     "@types/lodash": "^4.14.201",
     "@types/node": "^20.8.10",
     "@types/react": "^18.0.35",
@@ -73,6 +75,6 @@
   },
   "prisma": {
     "schema": "app/db/schema.prisma",
-    "seed": "tsx app/db/seed.ts"
+    "seed": "tsx app/db/seed/seed.ts"
   }
 }

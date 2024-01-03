@@ -1,14 +1,17 @@
-import {prisma} from "./prisma-client";
+import {prisma} from "../prisma-client";
+import {seedSkills} from "./skills-seed";
 
 async function emptyDb() {
   await prisma.project.deleteMany();
   await prisma.client.deleteMany();
   await prisma.user.deleteMany();
   await prisma.team.deleteMany();
+  await prisma.skill.deleteMany();
 }
 
 async function main() {
   await emptyDb();
+  await seedSkills();
 
   const magneTeam = await prisma.team.create({
     data: {
